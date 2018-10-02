@@ -1,17 +1,22 @@
-const axios = require('axios');
+const request = require('request');
 const {apikey} = require('../config/config.json');
 
 const getMovieDetails = (movieTitle) => {
-  const targetUrl = createUrl(movieTitle,apikey)
-  axios.get(targetUrl).then((res) => {
-    console.log(res);
-  }).catch((e) => {
-    throw new Error(e);
+  return new Promise((resolve, reject) => {
+    request(createUrl(movieTitle,apikey), (err, res, body) => {
+      if(err){return reject(err);}
+      try {
+        const parsedApiResponse = JSON.parse(body);
+        return resolve(parsedApiResponse)
+      } catch (e) {
+        return reject('Unable to parse response: ' + e);
+      }
+    })
   })
 }
 
 const handleResponse = (res) => {
-  console.log(res);
+  // console.log(res);
 }
 
 const createUrl = (movieTitle, apikey) => {

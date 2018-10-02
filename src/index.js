@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
 const {getMovies, getComments, postMovies, postComments} = require('./services/routes');
+
+app.use(bodyParser.json());
 
 app.get('/movies', getMovies);
 
