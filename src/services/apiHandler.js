@@ -7,17 +7,16 @@ const getMovieDetails = (movieTitle) => {
       if(err){return reject(err);}
       try {
         const parsedApiResponse = JSON.parse(body);
+        if(parsedApiResponse.Response === "False"){return reject(parsedApiResponse.Error)}
         return resolve(parsedApiResponse)
       } catch (e) {
-        return reject('Unable to parse response: ' + e);
+        return reject('Unable to parse API response');
       }
     })
   })
 }
 
-const handleResponse = (res) => {
-  // console.log(res);
-}
+// IDEA: Check for duplicates using movie id from api
 
 const createUrl = (movieTitle, apikey) => {
   return 'http://www.omdbapi.com/?t='+encodeURI(movieTitle)+'&apikey='+apikey;
