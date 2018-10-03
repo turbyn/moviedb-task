@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const commentSchema = new Schema({
-  commentContent: String,
+  content: String,
   timestamp: Number,
   imdbID: String
 });

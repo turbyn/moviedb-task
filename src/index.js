@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
-const {getMovies, getComments, postMovie, postComments} = require('./services/routes');
+const {getMovies, getComments, postMovie, postComment} = require('./services/routes');
 
 app.use(bodyParser.json());
 
@@ -12,7 +12,7 @@ app.get('/comments', getComments);
 
 app.post('/movies', postMovie);
 
-app.post('/comments', postComments);
+app.post('/comments', postComment);
 
 app.listen(3000, () => {
 

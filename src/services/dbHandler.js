@@ -28,6 +28,16 @@ const getAllMovies = () => {
   })
 }
 
+const getAllComments = () => {
+  return new Promise((resolve, reject) => {
+    Comment.find({}, function(err,result){
+      if(err) return reject(err)
+      return resolve(result);
+    })
+  })
+}
+
+
 const addMovie = (data) => {
   return new Promise((resolve, reject) => {
     const savedMovie = new Movie({ data: data, timestamp: new Date()})
@@ -38,14 +48,32 @@ const addMovie = (data) => {
   })
 }
 
-const addComment = (content, movieId) => {
+const addComment = (objectReceived) => {
   return new Promise((resolve, reject) => {
-    resolve('Done');  // TODO: Finish adding comments with checking if movie of Id exists in DB
+    const {comment, movieId} = objectReceived;
+    const savedComment = new Comment({ content: comment, imdbID: movieId, timestamp: new Date()});
+    savedComment.save((err) => {
+      if(err){return reject(err)};
+      return resolve(savedComment)
+    })
+  })
+}
+
+const verifyMovieOccurenceInDb = (comment, movieId) => {
+  return new Promise((resolve, reject) => {
+    Movie.find({ "data.imdbID": movieId}, function(err,result){
+      if(err) return reject(err)
+      if(result.length === 0) return reject('Movie not found in db');
+      return resolve({comment,movieId})
+    })
   })
 }
 
 module.exports = {
   getMovie,
   getAllMovies,
-  addMovie
+  getAllComments,
+  addMovie,
+  addComment,
+  verifyMovieOccurenceInDb
 }
