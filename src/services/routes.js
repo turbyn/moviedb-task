@@ -24,11 +24,15 @@ const postMovie = async (req, res) => {
   }
 
   apiHandler.getMovieDetails(req.body.title)
+  .then(dbHandler.preventMultiple)
   .then(dbHandler.addMovie)
   .then((objectResult) => {
     res.status(200).send(objectResult);
   })
   .catch((err) => {
+    if(err.data) {
+      return res.status(200).send(err.data)
+    }
     res.status(503).send(JSON.stringify(err));
   })
 

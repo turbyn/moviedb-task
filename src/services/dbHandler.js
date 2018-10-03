@@ -58,8 +58,9 @@ const addComment = (objectReceived) => {
     })
   })
 }
+// TODO: Include overwriting in DB
 
-const verifyMovieOccurenceInDb = (comment, movieId) => {
+const verifyMovieOccurenceInDb = (comment, movieId, calledIn) => {
   return new Promise((resolve, reject) => {
     Movie.find({ "data.imdbID": movieId}, function(err,result){
       if(err) return reject(err)
@@ -69,11 +70,25 @@ const verifyMovieOccurenceInDb = (comment, movieId) => {
   })
 }
 
+const preventMultiple = (dataObject) => {
+  console.log('Already existing running')
+  return new Promise((resolve, reject) => {
+    Movie.find({ "data.imdbID": dataObject.imdbID}, function(err,result){
+      if(err) return reject(err)
+      if(result.length > 0){return reject({err: "Movie already existing", data: dataObject})}
+      return resolve(dataObject)
+    })
+  })
+}
+
+
+
 module.exports = {
   getMovie,
   getAllMovies,
   getAllComments,
   addMovie,
   addComment,
-  verifyMovieOccurenceInDb
+  verifyMovieOccurenceInDb,
+  preventMultiple
 }
