@@ -3,7 +3,11 @@ const dbHandler = require('./dbHandler.js');
 
 
 const getMovies = async (req, res) => {
-
+  dbHandler.getAllMovies().then((result) => {
+    res.status(200).send(result)
+  }).catch((e) => {
+    res.status(403).send(e);
+  })
 }
 
 const getComments = async (req, res) => {

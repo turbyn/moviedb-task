@@ -20,7 +20,12 @@ const getMovie = (movieTitle, id) => {
 }
 
 const getAllMovies = () => {
-
+  return new Promise((resolve, reject) => {
+    Movie.find({}, function(err,result){
+      if(err) return reject(err)
+      return resolve(result);
+    })
+  })
 }
 
 const addMovie = (data) => {
