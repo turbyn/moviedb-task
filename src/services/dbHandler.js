@@ -6,6 +6,8 @@ const db = mongoose.connection;
 
 const {mongoURI} = require('../config/config.json');
 
+const utilities = require('./utilities.js');
+
 mongoose.connect(mongoURI);
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
@@ -15,17 +17,25 @@ db.once('open', () => {
 const Movie = mongoose.model('movies');
 const Comment = mongoose.model('comments');
 
-const getMovie = (movieTitle, id) => {
-  //get mongodb here
-}
+/*
+available queries:
+r_day-s
+r_day-e
+runtime-s
+runtime-e
+imdb-s
+imdb-e
+
+sort=r_day/runtime/imdb
+order=desc/asc
+*/
 
 const getAllMovies = (parsedQueryObject) => {
   return new Promise((resolve, reject) => {
-    console.log('PARSED QUERY OBJECT IN GET ALL MOVIES');
     console.log(parsedQueryObject);
     Movie.find({}, function(err,result){
       if(err) return reject(err)
-      return resolve(result);
+      return resolve(utilities.processQueries(parsedQueryObject, result));
     })
   })
 }
@@ -86,7 +96,6 @@ const preventMultiple = (dataObject) => {
 
 
 module.exports = {
-  getMovie,
   getAllMovies,
   getAllComments,
   addMovie,
