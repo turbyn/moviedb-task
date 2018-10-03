@@ -12,18 +12,27 @@ const getComments = async (req, res) => {
 
 const postMovie = async (req, res) => {
   if(!req.body.title){
-    res.status(403).end('Title not specified');
+    return res.status(403).send('Title not specified');
   }
+
+  // apiHandler.getMovieDetails(req.body.title)
+  // .then(dbHandler.addMovie)
+  // .then((objectResult) => {
+  //   res.status(200).send(objectResult);
+  // })
+  // .catch((err) => {
+  //   res.status(503).send(JSON.stringify(err));
+  // })
 
   apiHandler.getMovieDetails(req.body.title)
   .then(dbHandler.addMovie)
-  .then((res) => {
-    res.status(200).end('ok');
+  .then((objectResult) => {
+    res.status(200).send(objectResult);
   })
   .catch((err) => {
-    res.status(503).end(JSON.stringify(err));
+    res.status(503).send(JSON.stringify(err));
   })
-  
+
 }
 
 const postComments = (req, res) => {

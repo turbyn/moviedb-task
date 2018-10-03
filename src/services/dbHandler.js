@@ -25,9 +25,10 @@ const getAllMovies = () => {
 
 const addMovie = (data) => {
   return new Promise((resolve, reject) => {
-    new Movie({ data: data, timestamp: new Date()}).save((err) => {
-      if(err) return reject(err);
-      return resolve();
+    const savedMovie = new Movie({ data: data, timestamp: new Date()})
+    savedMovie.save((err) => {
+      if(err){return reject(err)};
+      return resolve(savedMovie);
     })
   })
 }
