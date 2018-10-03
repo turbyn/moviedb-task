@@ -1,5 +1,6 @@
 const request = require('request');
 const {apikey} = require('../config/config.json');
+const {createUrl} = require('./utilities.js');
 
 const getMovieDetails = (movieTitle) => {
   return new Promise((resolve, reject) => {
@@ -14,12 +15,6 @@ const getMovieDetails = (movieTitle) => {
       }
     })
   })
-}
-
-// IDEA: Check for duplicates using movie id from api
-
-const createUrl = (movieTitle, apikey) => {
-  return 'http://www.omdbapi.com/?t='+encodeURI(movieTitle)+'&apikey='+apikey;
 }
 
 module.exports = {

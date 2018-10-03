@@ -1,9 +1,11 @@
 const apiHandler = require('./apiHandler.js');
 const dbHandler = require('./dbHandler.js');
-
+const utilities = require('./utilities.js')
 
 const getMovies = async (req, res) => {
-  dbHandler.getAllMovies().then((result) => {
+  utilities.parseQueryString(req)
+  .then(dbHandler.getAllMovies)
+  .then((result) => {
     res.status(200).send(result)
   }).catch((e) => {
     res.status(403).send(e);
@@ -11,7 +13,9 @@ const getMovies = async (req, res) => {
 }
 
 const getComments = async (req, res) => {
-  dbHandler.getAllComments().then((result) => {
+  utilities.parseQueryString(req)
+  .then(dbHandler.getAllComments)
+  .then((result) => {
     res.status(200).send(result)
   }).catch((e) => {
     res.status(403).send(e);

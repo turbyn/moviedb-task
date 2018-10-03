@@ -19,8 +19,10 @@ const getMovie = (movieTitle, id) => {
   //get mongodb here
 }
 
-const getAllMovies = () => {
+const getAllMovies = (parsedQueryObject) => {
   return new Promise((resolve, reject) => {
+    console.log('PARSED QUERY OBJECT IN GET ALL MOVIES');
+    console.log(parsedQueryObject);
     Movie.find({}, function(err,result){
       if(err) return reject(err)
       return resolve(result);
@@ -28,15 +30,16 @@ const getAllMovies = () => {
   })
 }
 
-const getAllComments = () => {
+const getAllComments = (parsedQueryObject) => {
   return new Promise((resolve, reject) => {
-    Comment.find({}, function(err,result){
+    let mongoQueryObject = {};
+    if(parsedQueryObject.id) {mongoQueryObject = {"imdbID" : parsedQueryObject.id}};
+    Comment.find(mongoQueryObject, function(err,result){
       if(err) return reject(err)
       return resolve(result);
     })
   })
 }
-
 
 const addMovie = (data) => {
   return new Promise((resolve, reject) => {
@@ -58,7 +61,6 @@ const addComment = (objectReceived) => {
     })
   })
 }
-// TODO: Include overwriting in DB
 
 const verifyMovieOccurenceInDb = (comment, movieId, calledIn) => {
   return new Promise((resolve, reject) => {
