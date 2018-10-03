@@ -42,25 +42,48 @@ const processQueries = (parsedQueryObject, result) => {
   //   return movie.data.
   // })
 
+  // return result
+  // .filter((movie) => {
+  //     const isAvailable = movie.data.Released !== "N/A"
+  //     if(isAvailable){
+  //     let movieReleaseDate = moment(movie.data.Released, "DD MMM YYYY").valueOf() / 1000;
+  //     let releaseDayMin = 0;
+  //     let releaseDayMax = 2145744000;
+  //
+  //     let incomingDayMin = parseInt(queryObject['r_day-min']);
+  //     let incomingDayMax = parseInt(queryObject['r_day-max']);
+  //
+  //     if(!isNaN(incomingDayMin)) {
+  //       releaseDayMin = incomingDayMin
+  //     }
+  //     if(!isNaN(incomingDayMax)) {
+  //       releaseDayMax = incomingDayMax
+  //     }
+  //
+  //     return movieReleaseDate >= releaseDayMin && movieReleaseDate <= releaseDayMax
+  //     }
+  // })
+
   return result.filter((movie) => {
-      const isAvailable = movie.data.Released !== "N/A"
-      if(isAvailable){
-      let movieReleaseDate = moment(movie.data.Released, "DD MMM YYYY").valueOf() / 1000;
-      let releaseDayMin = 0;
-      let releaseDayMax = 2145744000;
+    const isAvailable = movie.data.Runtime !== "N/A"
+    if(isAvailable){
+    let movieRuntime = parseInt(movie.data.Runtime.split(' ')[0]);
+    let runtimeMin = 0;
+    let runtimeMax = 60000;
 
-      let incomingDayMin = parseInt(queryObject['r_day-min']);
-      let incomingDayMax = parseInt(queryObject['r_day-max']);
+    let incomingRuntimeMin = parseInt(queryObject['runtime-min']);
+    let incomingRuntimeMax = parseInt(queryObject['runtime-max']);
 
-      if(!isNaN(incomingDayMin)) {
-        releaseDayMin = incomingDayMin
-      }
-      if(!isNaN(incomingDayMax)) {
-        releaseDayMax = incomingDayMax
-      }
-
-      return movieReleaseDate > releaseDayMin && movieReleaseDate < releaseDayMax
-      }
+    if(!isNaN(incomingRuntimeMin)) {
+      runtimeMin = incomingRuntimeMin
+    }
+    if(!isNaN(incomingRuntimeMax)) {
+      runtimeMax = incomingRuntimeMax
+    }
+    return !isNaN(movieRuntime) && movieRuntime >= runtimeMin && movieRuntime <= runtimeMax;
+    //
+    // return movieReleaseDate > releaseDayMin && movieReleaseDate < releaseDayMax
+    }
   })
 
   //   console.log(moment(movie.data.Released, "DD MMM YYYY"));
