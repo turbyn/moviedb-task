@@ -4,6 +4,8 @@
 
 As for the tech stack I decided to go with MongoDB (by using mongoose) due to ease in processing results later on (especially when it comes to filtering results based on query in POST /movies), Express for routing and Heroku for deployment, because I did a couple of projects using those.
 
+I've also used [mlab](https://mlab.com) for DB hosting.
+
 # Setting up
 
 To run app, you will require your mongo url as well as apikey (available [here](http://www.omdbapi.com/))
