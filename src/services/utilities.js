@@ -64,27 +64,46 @@ const processQueries = (parsedQueryObject, result) => {
   //     }
   // })
 
+  // return result.filter((movie) => {
+  //   const isAvailable = movie.data.Runtime !== "N/A"
+  //   if(isAvailable){
+  //   let movieRuntime = parseInt(movie.data.Runtime.split(' ')[0]);
+  //   let runtimeMin = 0;
+  //   let runtimeMax = 60000;
+  //
+  //   let incomingRuntimeMin = parseInt(queryObject['runtime-min']);
+  //   let incomingRuntimeMax = parseInt(queryObject['runtime-max']);
+  //
+  //   if(!isNaN(incomingRuntimeMin)) {
+  //     runtimeMin = incomingRuntimeMin
+  //   }
+  //   if(!isNaN(incomingRuntimeMax)) {
+  //     runtimeMax = incomingRuntimeMax
+  //   }
+  //   return !isNaN(movieRuntime) && movieRuntime >= runtimeMin && movieRuntime <= runtimeMax;
+  //   }
+  // })
+
   return result.filter((movie) => {
-    const isAvailable = movie.data.Runtime !== "N/A"
+    const isAvailable = movie.data.imdbRating !== "N/A"
     if(isAvailable){
-    let movieRuntime = parseInt(movie.data.Runtime.split(' ')[0]);
-    let runtimeMin = 0;
-    let runtimeMax = 60000;
+    let movieScore = parseFloat(movie.data.imdbRating);
+    let scoreMin = 0;
+    let scoreMax = 10.0;
 
-    let incomingRuntimeMin = parseInt(queryObject['runtime-min']);
-    let incomingRuntimeMax = parseInt(queryObject['runtime-max']);
+    let incomingScoreMin = parseFloat(queryObject['imdb-min']);
+    let incomingScoreMax = parseFloat(queryObject['imdb-max']);
 
-    if(!isNaN(incomingRuntimeMin)) {
-      runtimeMin = incomingRuntimeMin
+    if(!isNaN(incomingScoreMin)) {
+      scoreMin = incomingScoreMin
     }
-    if(!isNaN(incomingRuntimeMax)) {
-      runtimeMax = incomingRuntimeMax
+    if(!isNaN(incomingScoreMax)) {
+      scoreMax = incomingScoreMax
     }
-    return !isNaN(movieRuntime) && movieRuntime >= runtimeMin && movieRuntime <= runtimeMax;
-    //
-    // return movieReleaseDate > releaseDayMin && movieReleaseDate < releaseDayMax
+    return !isNaN(movieScore) && movieScore >= scoreMin && movieScore <= scoreMax;
     }
   })
+
 
   //   console.log(moment(movie.data.Released, "DD MMM YYYY"));
   //   console.log(moment(parseInt(parsedQueryObject['r_day-min'])))
