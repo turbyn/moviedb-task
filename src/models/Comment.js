@@ -8,4 +8,6 @@ const commentSchema = new Schema({
   imdbID: String
 });
 
-mongoose.model('comments', commentSchema);
+const Comment = mongoose.model('comments', commentSchema);
+
+module.exports = {Comment}

@@ -4,7 +4,10 @@ const { Schema } = mongoose;
 
 const movieSchema = new Schema({
   data: Object,
-  timestamp: Number
+  timestamp: Number,
+  queryTitle: String
 });
 
-mongoose.model('movies', movieSchema);
+const Movie = mongoose.model('movies', movieSchema);
+
+module.exports = {Movie}

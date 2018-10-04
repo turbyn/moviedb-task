@@ -6,7 +6,7 @@ const getMovies = async (req, res) => {
   utilities.parseQueryString(req)
   .then(dbHandler.getAllMovies)
   .then((result) => {
-    res.status(200).send(result)
+    res.status(200).send({result})
   }).catch((e) => {
     res.status(403).send(e);
   })
@@ -16,15 +16,15 @@ const getComments = async (req, res) => {
   utilities.parseQueryString(req)
   .then(dbHandler.getAllComments)
   .then((result) => {
-    res.status(200).send(result)
+    res.status(200).send({result})
   }).catch((e) => {
-    res.status(403).send(e);
+    res.status(400).send(e);
   })
 }
 
 const postMovie = async (req, res) => {
   if(!req.body.title){
-    return res.status(403).send('Title not specified');
+    return res.status(400).send('Title not specified');
   }
 
   apiHandler.getMovieDetails(req.body.title)
@@ -35,6 +35,7 @@ const postMovie = async (req, res) => {
   })
   .catch((err) => {
     if(err.data) {
+      console.log('ERR DATA')
       return res.status(200).send(err.data)
     }
     res.status(503).send(JSON.stringify(err));
@@ -52,7 +53,7 @@ const postComment = (req, res) => {
     res.status(200).send(objectResult)
   })
   .catch((err) => {
-    res.status(503).send(JSON.stringify(err))
+    res.status(400).send(JSON.stringify(err))
   })
 }
 

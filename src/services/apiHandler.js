@@ -8,8 +8,9 @@ const getMovieDetails = (movieTitle) => {
       if(err){return reject(err);}
       try {
         const parsedApiResponse = JSON.parse(body);
+        const originalQueryString = movieTitle
         if(parsedApiResponse.Response === "False"){return reject(parsedApiResponse.Error)}
-        return resolve(parsedApiResponse)
+        return resolve({parsedApiResponse, originalQueryString})
       } catch (e) {
         return reject('Unable to parse API response');
       }

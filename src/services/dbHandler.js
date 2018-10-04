@@ -25,9 +25,6 @@ runtime-s
 runtime-e
 imdb-s
 imdb-e
-
-sort=r_day/runtime/imdb
-order=desc/asc
 */
 
 const getAllMovies = (parsedQueryObject) => {
@@ -53,7 +50,7 @@ const getAllComments = (parsedQueryObject) => {
 
 const addMovie = (data) => {
   return new Promise((resolve, reject) => {
-    const savedMovie = new Movie({ data: data, timestamp: new Date()})
+    const savedMovie = new Movie({ data: data['parsedApiResponse'], timestamp: new Date(), queryTitle: data['originalQueryString']})
     savedMovie.save((err) => {
       if(err){return reject(err)};
       return resolve(savedMovie);
@@ -74,7 +71,7 @@ const addComment = (objectReceived) => {
 
 const verifyMovieOccurenceInDb = (comment, movieId, calledIn) => {
   return new Promise((resolve, reject) => {
-    Movie.find({ "data.imdbID": movieId}, function(err,result){
+    Movie.find({ "data.imdbID":movieId}, function(err,result){
       if(err) return reject(err)
       if(result.length === 0) return reject('Movie not found in db');
       return resolve({comment,movieId})
@@ -83,9 +80,13 @@ const verifyMovieOccurenceInDb = (comment, movieId, calledIn) => {
 }
 
 const preventMultiple = (dataObject) => {
-  console.log('Already existing running')
+  // console.log('Already existing running')
+  // console.log('Data object');
+  // console.log(dataObject)
   return new Promise((resolve, reject) => {
-    Movie.find({ "data.imdbID": dataObject.imdbID}, function(err,result){
+    Movie.find({ "data.imdbID": dataObject.parsedApiResponse.imdbID}, function(err,result){
+      console.log('Result');
+      console.log(result)
       if(err) return reject(err)
       if(result.length > 0){return reject({err: "Movie already existing", data: dataObject})}
       return resolve(dataObject)
