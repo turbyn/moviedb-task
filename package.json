@@ -21,7 +21,8 @@
   "scripts": {
     "test": "NODE_ENV=development mocha tests/*.test.js",
     "prod": "NODE_ENV=production node src/index.js",
-    "dev": "NODE_ENV=development node src/index.js"
+    "dev": "NODE_ENV=development node src/index.js",
+    "start": "NODE_ENV=production node src/index.js"
   },
   "author": "",
   "license": "ISC"
