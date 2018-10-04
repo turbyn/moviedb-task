@@ -45,7 +45,7 @@ $ npm run test
 
 # Usage
 
-### GET /movies || /movies?<queryString>
+### GET /movies
 
 ##### Example response
 ```
@@ -88,9 +88,9 @@ Available queries:
 ```
 /movies?r_day-min=-94694400&r_day-max=94694400&imdb-min=6.8&imdb-max=9.2&runtime-max=174
 ```
-Movies released between 1967 and 1973, with minimum imdb rate of 6.8, but not bigger than 9.2. Also, hast to be shorter than 174 minutes
+Movies released between 1967 and 1973, with minimum imdb rate of 6.8, but not bigger than 9.2. Also, has to be max 174 minutes long
 
-### GET /comments || /comments?id=<imdbId>
+### GET /comments
 
 ##### Example response
 ```
@@ -110,7 +110,7 @@ Movies released between 1967 and 1973, with minimum imdb rate of 6.8, but not bi
 ```
 ##### Additional Information and how to use
 
-Can be used to filter comments associated with proper by providing *imdbID* property in query string:
+Can be used to filter comments associated with proper movie by providing *imdbID* property in query string:
 **Example**
 ```
 /comments?id=tt0848228
