@@ -1,11 +1,14 @@
-const utilities = require('./services/utilities')
+// eslint-disable-next-line
+const utilities = require('./services/utilities');
 utilities.createConfigFile();
 
 const express = require('express');
+
 const app = express();
 const bodyParser = require('body-parser');
-const {getMovies, getComments, postMovie, postComment} = require('./services/routes');
-
+const {
+  getMovies, getComments, postMovie, postComment,
+} = require('./services/routes');
 
 
 app.use(bodyParser.json());
@@ -18,6 +21,6 @@ app.post('/movies', postMovie);
 
 app.post('/comments', postComment);
 
-app.listen(process.env.PORT || 3000, () => {})
+app.listen(process.env.PORT || 3000, () => {});
 
-module.exports = {app}
+module.exports = { app };
