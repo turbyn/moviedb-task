@@ -1,5 +1,11 @@
 const request = require('request');
-const {apikey} = require('../config/config.json');
+
+const utilities = require('./utilities.js');
+
+
+const {apikey} = require(utilities.getConfigPathForEnv());
+utilities.checkRequiredVariableForDevEnv(apikey, 'apikey');
+
 const {createUrl} = require('./utilities.js');
 
 const getMovieDetails = (movieTitle) => {

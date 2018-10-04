@@ -4,9 +4,10 @@ require('../models/Comment');
 const mongoose = require('mongoose');
 const db = mongoose.connection;
 
-const {mongoURI} = require('../config/config.json');
-
 const utilities = require('./utilities.js');
+
+const {mongoURI} = require(utilities.getConfigPathForEnv());
+utilities.checkRequiredVariableForDevEnv(mongoURI, 'mongoURI');
 
 mongoose.connect(mongoURI, { useNewUrlParser: true });
 db.on('error', console.error.bind(console, 'connection error:'));

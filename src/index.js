@@ -1,8 +1,11 @@
+const utilities = require('./services/utilities')
+utilities.createConfigFile();
+
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-
 const {getMovies, getComments, postMovie, postComment} = require('./services/routes');
+
 
 app.use(bodyParser.json());
 
@@ -14,8 +17,6 @@ app.post('/movies', postMovie);
 
 app.post('/comments', postComment);
 
-app.listen(3000, () => {
-
-})
+app.listen(3000, () => {})
 
 module.exports = {app}
