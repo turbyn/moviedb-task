@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const {getMovies, getComments, postMovie, postComment} = require('./services/routes');
 
 
+
 app.use(bodyParser.json());
 
 app.get('/movies', getMovies);
@@ -17,6 +18,6 @@ app.post('/movies', postMovie);
 
 app.post('/comments', postComment);
 
-app.listen(3000, () => {})
+app.listen(process.env.PORT || 3000, () => {})
 
 module.exports = {app}
