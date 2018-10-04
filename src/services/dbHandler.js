@@ -8,7 +8,7 @@ const {mongoURI} = require('../config/config.json');
 
 const utilities = require('./utilities.js');
 
-mongoose.connect(mongoURI);
+mongoose.connect(mongoURI, { useNewUrlParser: true });
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
   console.log('Running')
