@@ -18,56 +18,84 @@ const parseQueryString = (request) => {
   })
 }
 
+
 const processQueries = (parsedQueryObject, result) => {
   let queryObject = parsedQueryObject;
 
   return result
   .filter((movie) => {
-    return checkRangeForProperty(movie,0,2145744000,'r_day-',queryObject,'Released','int')
-  })
-  .filter((movie) => {
-    return checkRangeForProperty(movie,0,60000,'runtime-',queryObject,'Runtime','int')
-  })
-  .filter((movie) => {
-    return checkRangeForProperty(movie,0.0,10.0,'imdb-',queryObject,'imdbRating','float')
-  })
+      const isAvailable = movie.data.Released !== "N/A"
+      const queryMin = queryObject['r_day-min']
+      const queryMax = queryObject['r_day-max']
+      if(isAvailable || (queryMin || queryMax)){
+      let movieReleaseDate = moment(movie.data.Released, "DD MMM YYYY").valueOf() / 1000;
+      let releaseDayMin = -1893456000;
+      let releaseDayMax = 2145744000;
 
-}
+      let incomingDayMin = parseInt(queryObject['r_day-min']);
+      let incomingDayMax = parseInt(queryObject['r_day-max']);
 
-const checkRangeForProperty = (movie,propertyMinValue,propertyMaxValue,propertyQueryPath,queryObject,propertyObjectPath,variableType) => {
+      if(!isNaN(incomingDayMin)) {
+        releaseDayMin = incomingDayMin
+      }
+      if(!isNaN(incomingDayMax)) {
+        releaseDayMax = incomingDayMax
+      }
 
+      return !isNaN(movieReleaseDate) && movieReleaseDate >= releaseDayMin && movieReleaseDate <= releaseDayMax
+    }else{
+      return true
+    }
+  }).filter((movie) => {
+    const queryMin = queryObject['runtime-min']
+    const queryMax = queryObject['runtime-max']
 
-  const queryMin = queryObject[propertyQueryPath+'min']
-  const queryMax = queryObject[propertyQueryPath+'max']
+    const isAvailable = movie.data.Runtime !== "N/A"
+    if(isAvailable || (queryMin || queryMax)){
+    let movieRuntime = parseInt(movie.data.Runtime.split(' ')[0]);
+    let runtimeMin = 0;
+    let runtimeMax = 60000;
 
-  const isAvailable = movie.data[propertyObjectPath] !== "N/A"
-  if(isAvailable || (queryMin || queryMax)){
+    let incomingRuntimeMin = parseInt(queryObject['runtime-min']);
+    let incomingRuntimeMax = parseInt(queryObject['runtime-max']);
 
-  // let movieProperty = parseFloat(movie.data[propertyObjectPath]);
-  let propertyMin = propertyMinValue;
-  let propertyMax = propertyMaxValue;
+    if(!isNaN(incomingRuntimeMin)) {
+      runtimeMin = incomingRuntimeMin
+    }
+    if(!isNaN(incomingRuntimeMax)) {
+      runtimeMax = incomingRuntimeMax
+    }
 
-  // var movieProperty;
-  if(variableType === "int"){
-    var movieProperty = parseInt(movie.data[propertyObjectPath]);
-    var incomingPropertyMin = parseInt(queryObject[propertyQueryPath+'min']);
-    var incomingPropertyMax = parseInt(queryObject[propertyQueryPath+'max']);
-  }else if(variableType === "float"){
-    var movieProperty = parseFloat(movie.data[propertyObjectPath]);
-    var incomingPropertyMin = parseFloat(queryObject[propertyQueryPath+'min']);
-    var incomingPropertyMax = parseFloat(queryObject[propertyQueryPath+'max']);
+    return !isNaN(movieRuntime) && movieRuntime >= runtimeMin && movieRuntime <= runtimeMax;
+  }else{
+    return true
   }
-  if(!isNaN(incomingPropertyMin)) {
-    propertyMin = incomingPropertyMin
-  }
-  if(!isNaN(incomingPropertyMax)) {
-    propertyMax = incomingPropertyMax
-  }
+  }).filter((movie) => {
+    const queryMin = queryObject['imdb-min']
+    const queryMax = queryObject['imdb-max']
 
-  return !isNaN(movieProperty) && movieProperty >= propertyMin && movieProperty <= propertyMax;
-}else{
-  return true
-}
+    const isAvailable = movie.data.imdbRating !== "N/A"
+    if(isAvailable || (queryMin || queryMax)){
+    let movieScore = parseFloat(movie.data.imdbRating);
+    let scoreMin = 0;
+    let scoreMax = 10.0;
+
+    let incomingScoreMin = parseFloat(queryObject['imdb-min']);
+    let incomingScoreMax = parseFloat(queryObject['imdb-max']);
+
+    if(!isNaN(incomingScoreMin)) {
+      scoreMin = incomingScoreMin
+    }
+    if(!isNaN(incomingScoreMax)) {
+      scoreMax = incomingScoreMax
+    }
+
+    return !isNaN(movieScore) && movieScore >= scoreMin && movieScore <= scoreMax;
+  }else{
+    return true
+  }
+  })
+  return result
 }
 
 const getConfigPathForEnv = () => {
