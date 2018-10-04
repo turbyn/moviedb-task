@@ -17,11 +17,6 @@ const parseQueryString = (request) => {
 }
 
 const processQueries = (parsedQueryObject, result) => {
-  console.log('Processing queries with parsedQueryObject');
-  console.log(parsedQueryObject);
-  console.log('Received from db:')
-  console.log(result);
-
   let queryObject = parsedQueryObject;
 
   // const defaultValues = {
@@ -42,51 +37,74 @@ const processQueries = (parsedQueryObject, result) => {
   //   return movie.data.
   // })
 
-  // return result
-  // .filter((movie) => {
-  //     const isAvailable = movie.data.Released !== "N/A"
-  //     if(isAvailable){
-  //     let movieReleaseDate = moment(movie.data.Released, "DD MMM YYYY").valueOf() / 1000;
-  //     let releaseDayMin = 0;
-  //     let releaseDayMax = 2145744000;
-  //
-  //     let incomingDayMin = parseInt(queryObject['r_day-min']);
-  //     let incomingDayMax = parseInt(queryObject['r_day-max']);
-  //
-  //     if(!isNaN(incomingDayMin)) {
-  //       releaseDayMin = incomingDayMin
-  //     }
-  //     if(!isNaN(incomingDayMax)) {
-  //       releaseDayMax = incomingDayMax
-  //     }
-  //
-  //     return movieReleaseDate >= releaseDayMin && movieReleaseDate <= releaseDayMax
-  //     }
-  // })
+  return result
+  .filter((movie) => {
+      const isAvailable = movie.data.Released !== "N/A"
+      const queryMin = queryObject['r_day-min']
+      const queryMax = queryObject['r_day-max']
+      if(isAvailable || (queryMin || queryMax)){
+      let movieReleaseDate = moment(movie.data.Released, "DD MMM YYYY").valueOf() / 1000;
+      let releaseDayMin = 0;
+      let releaseDayMax = 2145744000;
 
-  // return result.filter((movie) => {
-  //   const isAvailable = movie.data.Runtime !== "N/A"
-  //   if(isAvailable){
-  //   let movieRuntime = parseInt(movie.data.Runtime.split(' ')[0]);
-  //   let runtimeMin = 0;
-  //   let runtimeMax = 60000;
-  //
-  //   let incomingRuntimeMin = parseInt(queryObject['runtime-min']);
-  //   let incomingRuntimeMax = parseInt(queryObject['runtime-max']);
-  //
-  //   if(!isNaN(incomingRuntimeMin)) {
-  //     runtimeMin = incomingRuntimeMin
-  //   }
-  //   if(!isNaN(incomingRuntimeMax)) {
-  //     runtimeMax = incomingRuntimeMax
-  //   }
-  //   return !isNaN(movieRuntime) && movieRuntime >= runtimeMin && movieRuntime <= runtimeMax;
-  //   }
-  // })
+      let incomingDayMin = parseInt(queryObject['r_day-min']);
+      let incomingDayMax = parseInt(queryObject['r_day-max']);
 
-  return result.filter((movie) => {
+      if(!isNaN(incomingDayMin)) {
+        releaseDayMin = incomingDayMin
+      }
+      if(!isNaN(incomingDayMax)) {
+        releaseDayMax = incomingDayMax
+      }
+      // console.log('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-')
+      // console.log('Title: '+movie.data.Title);
+      // console.log('Release day min');
+      // console.log('Min value:'+releaseDayMin);
+      // console.log('Max value:'+releaseDayMax);
+      // console.log('Will pass?'+(!isNaN(movieReleaseDate) && movieReleaseDate >= releaseDayMin && movieReleaseDate <= releaseDayMax))
+      // console.log('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-')
+      return !isNaN(movieReleaseDate) && movieReleaseDate >= releaseDayMin && movieReleaseDate <= releaseDayMax
+    }else{
+      return true
+    }
+  }).filter((movie) => {
+    const queryMin = queryObject['runtime-min']
+    const queryMax = queryObject['runtime-max']
+
+    const isAvailable = movie.data.Runtime !== "N/A"
+    if(isAvailable || (queryMin || queryMax)){
+    let movieRuntime = parseInt(movie.data.Runtime.split(' ')[0]);
+    let runtimeMin = 0;
+    let runtimeMax = 60000;
+
+    let incomingRuntimeMin = parseInt(queryObject['runtime-min']);
+    let incomingRuntimeMax = parseInt(queryObject['runtime-max']);
+
+    if(!isNaN(incomingRuntimeMin)) {
+      runtimeMin = incomingRuntimeMin
+    }
+    if(!isNaN(incomingRuntimeMax)) {
+      runtimeMax = incomingRuntimeMax
+    }
+    //
+    // console.log('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-')
+    // console.log('Title: '+movie.data.Title);
+    // console.log('Runtime');
+    // console.log('Min value:'+runtimeMin);
+    // console.log('Max value:'+runtimeMax);
+    // console.log('Will pass?'+(!isNaN(movieRuntime) && movieRuntime >= runtimeMin && movieRuntime <= runtimeMax))
+    // console.log('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-')
+
+    return !isNaN(movieRuntime) && movieRuntime >= runtimeMin && movieRuntime <= runtimeMax;
+  }else{
+    return true
+  }
+  }).filter((movie) => {
+    const queryMin = queryObject['imdb-min']
+    const queryMax = queryObject['imdb-max']
+
     const isAvailable = movie.data.imdbRating !== "N/A"
-    if(isAvailable){
+    if(isAvailable || (queryMin || queryMax)){
     let movieScore = parseFloat(movie.data.imdbRating);
     let scoreMin = 0;
     let scoreMax = 10.0;
@@ -100,17 +118,19 @@ const processQueries = (parsedQueryObject, result) => {
     if(!isNaN(incomingScoreMax)) {
       scoreMax = incomingScoreMax
     }
+
+    // console.log('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-')
+    // console.log('Title: '+movie.data.Title);
+    // console.log('ImdbRating');
+    // console.log('Min value:'+scoreMin);
+    // console.log('Max value:'+scoreMax);
+    // console.log('Will pass?'+(!isNaN(movieScore) && movieScore >= scoreMin && movieScore <= scoreMax))
+    // console.log('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-')
     return !isNaN(movieScore) && movieScore >= scoreMin && movieScore <= scoreMax;
-    }
+  }else{
+    return true
+  }
   })
-
-
-  //   console.log(moment(movie.data.Released, "DD MMM YYYY"));
-  //   console.log(moment(parseInt(parsedQueryObject['r_day-min'])))
-  // })
-
-
-
   return result
 }
 
